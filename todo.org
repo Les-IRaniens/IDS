@@ -1,0 +1,26 @@
+#+TITLE: TODO LIST
+
+** GingerNerd
+   - Fonction qui parse les règles (+ retours erreur de syntaxe)
+   - Refaire la fonction populate
+   - Makefile
+   - XSS
+   - Veillier à la gestion de la mémoire
+   - Gestion des attaques (RULE MATCHER)
+
+
+** AbdoulTeaDrinkerWithOneSugarNotTwo
+  - Fonction qui lit les règles (READ RULES) (ajouts d'un flag argv pour pointer vers le fichier)
+    (ex ./ids -f intrusion.rule)
+  - Fonction qui crée le syslog [[https://www.gnu.org/software/libc/manual/html_node/Syslog-Example.html][Syslog Documentation]]
+  - Le service systemd (-> makefile (GingerNerd))
+  - Fonction qui check les accès root
+
+    
+** Les deux
+  - Ajouts de protocole
+  - Rapport (Choix des flags (Coding style ANSI), Editeur
+  
+** Bonus
+   - Socket à distance (netcat comme client)
+   
