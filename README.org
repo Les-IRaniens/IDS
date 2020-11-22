@@ -1,0 +1,5 @@
+* IDS
+** How to clone the repo ?
+#+BEGIN_SRC bash
+git clone https://github.com/Les-IRaniens/IDS --recursive
+#+END_SRC

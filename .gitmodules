@@ -1,3 +1,4 @@
 [submodule "libeasy"]
 	path = libeasy
 	url = https://github.com/Les-IRaniens/libeasy
+	branch = main
