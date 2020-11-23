@@ -12,7 +12,9 @@ CFLAGS = 			\
 	-g				\
 	-fsanitize=undefined 	\
 	-fsanitize=address  	\
-	-I.						\
+	-Isrc/					\
+	-Ilibeasy/lists			\
+	-Ilibeasy/string		\
 	-lpcap
 
 LDFLAGS	=			\
@@ -22,8 +24,9 @@ LDFLAGS	=			\
 
 TARGET = ids
 
-SRC = $(wildcard *.c)
+SRC = $(wildcard src/*.c)
 OBJ = $(patsubst %.c, $(BUILD_DIRECTORY)/%.o, $(SRC))
+EASYOBJ = $(wildcard libeasy/build/*/*.o)
 
 all: $(TARGET)
 
@@ -35,7 +38,7 @@ $(BUILD_DIRECTORY)/%.o: %.c
 $(TARGET): $(OBJ)
 	$(DIRECTORY_GUARD)
 	@echo [LD] $@
-	$(CC) $^ -o $@ $(LDFLAGS)
+	@$(CC) $^ $(EASYOBJ) -o $@ $(LDFLAGS)
 
 clean:
 	rm $(TARGET)
