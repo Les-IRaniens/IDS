@@ -1,9 +1,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <utils/macro.h>
-#include <checkuser.h>
-#include <usage.h>
+#include "checkuser.h"
+#include "usage.h"
 
 int 
 main(int argc, char* argv[])
@@ -17,7 +16,7 @@ main(int argc, char* argv[])
 	if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)
 	{
 		show_usage(argv[0]);
-		return 0;
+		return argc == 1;
 	}
 
 	if (!is_root())

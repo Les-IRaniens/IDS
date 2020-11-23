@@ -1,6 +1,7 @@
-#include <checkuser.h>
 #include <unistd.h>
 #include <sys/types.h>
+
+#include "checkuser.h"
 
 bool
 is_root(void)
