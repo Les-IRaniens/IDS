@@ -1,2 +1,7 @@
 #+AUTHOR: Jordan DALCQ & Mustafa-Can KUS
 #+TITLE: Implémentation d'un IDS
+
+
+* Journal de board
+** Jour 0
+Durant ce jours, on s'est concentré sur les outils qu'on allait utilisé. Nous avions tous d'abord pensé que nous utiliserions Emacs comme éditeur de texte (pour son excellent outils de prise de note (ORG), pour faire notre rapport et son excellent gestionnaire git (MAGIT)), mais ces pauvres qualité en tant qu'editeur de texte, nous a fait prendre concience qu'on devrait plutôt se tourner vers le plus classique visual studio code pour l'edition du code et emacs pour l'écriture de notre rapport.
