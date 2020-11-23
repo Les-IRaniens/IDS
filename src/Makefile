@@ -9,9 +9,10 @@ CFLAGS = 			\
 	-Wall			\
 	-Wextra			\
 	-Werror			\
-	-g			\	# Debug flags
+	-g				\
 	-fsanitize=undefined 	\
 	-fsanitize=address  	\
+	-I.						\
 	-lpcap
 
 LDFLAGS	=			\
@@ -24,17 +25,17 @@ TARGET = ids
 SRC = $(wildcard *.c)
 OBJ = $(patsubst %.c, $(BUILD_DIRECTORY)/%.o, $(SRC))
 
-all: TARGET
+all: $(TARGET)
 
 $(BUILD_DIRECTORY)/%.o: %.c
 	$(DIRECTORY_GUARD)
 	@echo [CC] $<
-	@(CC) $(CFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS) -c -o $@ $<
 
-TARGET: $(OBJ)
+$(TARGET): $(OBJ)
 	$(DIRECTORY_GUARD)
 	@echo [LD] $@
-	@$(CC) $^ -o $@ $(LDFLAGS)
+	$(CC) $^ -o $@ $(LDFLAGS)
 
 clean:
 	rm $(TARGET)
