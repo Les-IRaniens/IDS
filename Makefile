@@ -13,8 +13,7 @@ CFLAGS = 			\
 	-fsanitize=undefined 	\
 	-fsanitize=address  	\
 	-Isrc/					\
-	-Ilibeasy/lists			\
-	-Ilibeasy/string		\
+	-Ilibeasy/				\
 	-lpcap
 
 LDFLAGS	=			\
