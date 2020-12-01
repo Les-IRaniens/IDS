@@ -3,7 +3,6 @@ BUILD_DIRECTORY = build
 
 CC = gcc
 CFLAGS = 			\
-	-ansi			\
 	-pedantic		\
 	-Wpedantic		\
 	-Wall			\
