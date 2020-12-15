@@ -8,13 +8,13 @@
 #include "scan.h"
 #include "checkuser.h"
 #include "usage.h"
+#include "rule.h"
 
 int 
 main(int argc, char* argv[])
 {
     char *interface = NULL;
-	char *buffer;
-	char *file;
+	char *file = NULL;
 	List rules;
 
 	if (argc == 1)
@@ -53,13 +53,11 @@ main(int argc, char* argv[])
 		return 1;
 	}
 
+	(void) interface;
 	rules = read_rules(file);
-	buffer = as_str_list(&rules);
-	printf("%s\n", buffer);
-	scan_network(interface);
+	parse_rule(rules);
+	/* scan_network(interface); */
 
-	free(buffer);
 	free_list(&rules);
-
 	return 0;
 }
