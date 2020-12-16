@@ -7,15 +7,20 @@
 
 #include "rule.h"
 
-void 
+RuleList
 parse_rule(List rules)
 {
     size_t i;
     char *rule_raw;
     char *token;
-
-    Rule rule;
+    char *actions;
     String action;
+    
+    Rule rule;
+    RuleList list;
+
+    list.rules  = (Rule *) malloc(sizeof(Rule) * len_list(&rules));
+    list.length = len_list(&rules);
 
     for (i = 0; i < len_list(&rules); i++)
     {
@@ -38,9 +43,21 @@ parse_rule(List rules)
             token = strtok(NULL, " ");
         }
 
-        pop_tovoid_char_string(&action, 2);
+        pop_tovoid_char_string(&action, 4);
+        actions = as_str_string(&action);
+        actions++;
+        
+        strcpy(rule.content, as_str_string(&action));
+        list.rules[i] = rule;
 
-        printf("%s\n", as_str_string(&action));
         free_string(&action);
     }
+
+    return list;
+}
+
+void 
+free_rules(RuleList *lst)
+{
+    free(lst->rules);
 }

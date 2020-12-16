@@ -3,7 +3,6 @@
 
 #define IP_ADDR_LEN_STR 16
 #define PORT_LEN_STR 5
-#define MSG_LENGTH 512
 #define CONTENT_LENGTH 512
 #define ACTION_LENGTH 64
 #define PROT_LENGTH 64
@@ -20,10 +19,16 @@ typedef struct _RULE
     char port_src[PORT_LEN_STR];
     char port_dest[PORT_LEN_STR];
 
-    char msg[MSG_LENGTH];          /* => Syslog */
     char content[CONTENT_LENGTH];      /* => Package content */
 } Rule;
 
-void parse_rule(List);
+typedef struct _RULE_LIST
+{
+    Rule *rules;
+    size_t length;
+} RuleList;
+
+RuleList parse_rule(List);
+void free_rules(RuleList *);
 
 #endif  /* !_IDS_RULE_H_ */

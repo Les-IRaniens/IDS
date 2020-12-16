@@ -13,9 +13,10 @@
 int 
 main(int argc, char* argv[])
 {
-    char *interface = NULL;
-	char *file = NULL;
+    char *interface;
+	char *file;
 	List rules;
+	RuleList parsed_rules;
 
 	if (argc == 1)
 	{
@@ -55,9 +56,11 @@ main(int argc, char* argv[])
 
 	(void) interface;
 	rules = read_rules(file);
-	parse_rule(rules);
+	parsed_rules = parse_rule(rules);
+
 	/* scan_network(interface); */
 
 	free_list(&rules);
+	free_rules(&parsed_rules);
 	return 0;
 }
