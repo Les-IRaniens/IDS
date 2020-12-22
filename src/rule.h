@@ -1,13 +1,13 @@
 #ifndef _IDS_RULE_H_
 #define _IDS_RULE_H_
 
+#include "utils/list.h"
+
 #define IP_ADDR_LEN_STR 16
 #define PORT_LEN_STR 5
 #define CONTENT_LENGTH 512
 #define ACTION_LENGTH 64
 #define PROT_LENGTH 64
-
-#include <lists/list.h>
 
 typedef struct _RULE
 {
@@ -28,7 +28,7 @@ typedef struct _RULE_LIST
     size_t length;
 } RuleList;
 
-RuleList parse_rule(List);
+RuleList parse_rule(StrList);
 void free_rules(RuleList *);
 
 #endif  /* !_IDS_RULE_H_ */

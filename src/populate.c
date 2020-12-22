@@ -16,6 +16,7 @@ void print_payload(int payload_length, unsigned char *payload)
 {
     if (payload_length > 0)
     {
+        printf("===============================================\n");
         const u_char *temp_pointer = payload;
         int byte_count = 0;
 
@@ -26,6 +27,7 @@ void print_payload(int payload_length, unsigned char *payload)
         }
 
         printf("\n");
+        printf("===============================================\n");
     }
 }
 
@@ -64,13 +66,13 @@ populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet, ETHER
     if (ntohs(ethernet->ether_type) == ETHERTYPE_ARP)
     {
         custom_frame->ethernet_type = ARP;
-        printf("\nARP packet: %d\n",custom_frame->ethernet_type);
+        /*printf("\nARP packet: %d\n",custom_frame->ethernet_type);*/
     }
 
     if (ntohs(ethernet->ether_type) == ETHERTYPE_IP)
     {
         custom_frame->ethernet_type = IPV4;
-        printf("\nIPV4 packet: %d\n",custom_frame->ethernet_type);
+        /*printf("\nIPV4 packet: %d\n",custom_frame->ethernet_type);*/
 
         ip = (struct sniff_ip*)(packet + SIZE_ETHERNET);
         IP_Packet custom_packet;
@@ -92,12 +94,12 @@ populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet, ETHER
 
         if ((int)ip->ip_p==UDP_PROTOCOL)
         {
-            printf("\nUDP Handling\n");
+            /*printf("\nUDP Handling\n");*/
         }
 
         if ((int)ip->ip_p==TCP_PROTOCOL)
         {
-            printf("\nTCP Handling\n");
+            /*printf("\nTCP Handling\n");*/
             tcp = (struct sniff_tcp*)(packet + SIZE_ETHERNET + size_ip);
             TCP_Segment custom_segment;
 

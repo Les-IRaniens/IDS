@@ -1,8 +1,8 @@
 #ifndef _IDS_READRULES_H_
 #define _IDS_READRULES_H_
 
-#include <lists/list.h>
+#include "utils/list.h"
 
-List read_rules(const char *);
+StrList read_rules(const char *);
 
 #endif/* !_IDS_READRULES_H_ */

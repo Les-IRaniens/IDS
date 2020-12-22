@@ -1,6 +1,8 @@
 #ifndef _IDS_SCAN_H_
 #define _IDS_SCAN_H_
 
-void scan_network(char *);
+#include "rule.h"
+
+void scan_network(char *, RuleList);
 
 #endif /* !IDS_SCAN_H */

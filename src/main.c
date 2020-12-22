@@ -2,20 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pcap/pcap.h>
-#include <lists/list.h>
 
 #include "readrules.h"
 #include "scan.h"
 #include "checkuser.h"
 #include "usage.h"
 #include "rule.h"
+#include "utils/list.h"
 
 int 
 main(int argc, char* argv[])
 {
     char *interface;
 	char *file;
-	List rules;
+	StrList rules;
 	RuleList parsed_rules;
 
 	if (argc == 1)
@@ -54,13 +54,12 @@ main(int argc, char* argv[])
 		return 1;
 	}
 
-	(void) interface;
 	rules = read_rules(file);
 	parsed_rules = parse_rule(rules);
 
-	/* scan_network(interface); */
+	scan_network(interface, parsed_rules); 
 
-	free_list(&rules);
+	free_str_list(&rules);
 	free_rules(&parsed_rules);
 	return 0;
 }

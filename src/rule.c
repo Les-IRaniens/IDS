@@ -2,30 +2,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <lists/list.h>
-#include <string/string.h>
+
+#include "utils/list.h"
 
 #include "rule.h"
 
 RuleList
-parse_rule(List rules)
+parse_rule(StrList rules)
 {
     size_t i;
     char *rule_raw;
-    char *token;
-    char *actions;
-    String action;
     
     Rule rule;
     RuleList list;
 
-    list.rules  = (Rule *) malloc(sizeof(Rule) * len_list(&rules));
-    list.length = len_list(&rules);
+    list.rules  = (Rule *) malloc(sizeof(Rule) * rules.length);
+    list.length = rules.length;
 
-    for (i = 0; i < len_list(&rules); i++)
+    for (i = 0; i < rules.length; i++)
     {
-        init_string(&action);
-        rule_raw = (char *) get_list_element(&rules, i).ptr;
+        rule_raw = rules.raw[i];
 
         strcpy(rule.action, strtok(rule_raw, " "));
         strcpy(rule.protocol, strtok(NULL, " "));
@@ -35,7 +31,7 @@ parse_rule(List rules)
         strcpy(rule.ip_dest, strtok(NULL, " "));
         strcpy(rule.port_dest, strtok(NULL, " "));
 
-        token = strtok(NULL, " ");
+        /*token = strtok(NULL, " ");
 
         while (token != NULL)
         {
@@ -50,7 +46,7 @@ parse_rule(List rules)
         strcpy(rule.content, as_str_string(&action));
         list.rules[i] = rule;
 
-        free_string(&action);
+        free_string(&action);*/
     }
 
     return list;
