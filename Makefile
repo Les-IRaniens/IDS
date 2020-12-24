@@ -11,9 +11,15 @@ CFLAGS = 						\
 	-g							\
 	-Isrc/						\
 	-lpcap						\
+	-fsanitize=undefined \
+	-fsanitize=address  \
+
 
 LDFLAGS	=						\
 	-lpcap						\
+	-fsanitize=undefined \
+	-fsanitize=address  \
+
 
 TARGET = ids
 

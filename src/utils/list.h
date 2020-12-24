@@ -15,5 +15,6 @@ typedef struct
 void init_str_list(StrList *);
 void append_str_list(StrList *, const char *);
 void free_str_list(StrList *);
+StrList split_to_strlist(char *, const char *);
 
 #endif /* !_IDS_LIST_H_ */

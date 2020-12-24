@@ -9,10 +9,18 @@
 #define ACTION_LENGTH 64
 #define PROT_LENGTH 64
 
+typedef enum 
+{
+    HTTP,
+    FTP,
+    TCP,
+    UDP
+} Protocole;
+
 typedef struct _RULE
 {
     char action[ACTION_LENGTH];
-    char protocol[PROT_LENGTH];
+    Protocole protocol;
 
     char ip_src[IP_ADDR_LEN_STR];
     char ip_dest[IP_ADDR_LEN_STR];

@@ -1,40 +1,13 @@
 #include "scan.h"
-#include "populate.h"
+#include "http.h"
 #include "utils/macro.h"
 #include "utils/list.h"
 
 #include <pcap/pcap.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-static bool next_package = false;
-
-typedef enum 
-{
-    CLIENT_SIDE,
-    SERVER_SIDE,
-    CONTENT,
-    NOT_HTTP
-} HttpRequestType;
-
-HttpRequestType
-is_http_request(char *str)
-{
-    if (strstr(str, "GET") != NULL || strstr(str, "POST") != NULL)
-    {
-        return CLIENT_SIDE;
-    }
-    else if (strstr(str, "HTTP/1.0") != NULL || strstr(str, "HTTP/1.1") != NULL || strstr(str, "HTTP/2.0") != NULL)
-    {
-        return SERVER_SIDE;
-    }
-    else if (next_package)
-    {
-        return CONTENT;
-    }
-
-    return NOT_HTTP;
-}
+static int next_package = 0;
 
 void
 handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
@@ -48,21 +21,11 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
 
     if (ether.data.data.data_length > 0)
     {
-        type = is_http_request((char *) ether.data.data.data);
-        
-        if (type != NOT_HTTP)
-        {
-            printf("OK");
-            printf(" =================\n");
-            printf("FROM: %s\n", ether.data.source_ip);
-            printf("TO: %s\n", ether.data.destination_ip);
-            printf("DATA: %s", ether.data.data.data);
-            printf(" =================\n");
-        }
+        type = is_http_request((char *) ether.data.data.data, next_package);
 
-        if (type == SERVER_SIDE)
+        if (type != HTTP_NOT_HTTP)
         {
-            printf("SERVER SIDE !\n");
+            check_rule_http(rules, ether, type, &next_package);
         }
     }
 }
