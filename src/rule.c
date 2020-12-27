@@ -60,7 +60,9 @@ parse_rule(StrList rules)
         strtok(NULL, " ");
         strcpy(rule.ip_dest, strtok(NULL, " "));
         strcpy(rule.port_dest, strtok(NULL, " "));
+
         rule.content[0] = 0;
+        rule.client_side[0] = 0;
 
         token = strtok(NULL, " ");
 
@@ -97,6 +99,11 @@ parse_rule(StrList rules)
             if (strcmp(key, "content") == 0)
             {
                 strcpy(rule.content, value);
+            }
+
+            if (strcmp(key, "client-side-content") == 0)
+            {
+                strcpy(rule.client_side, value);
             }
 
             token = strtok_r(NULL, ";", &save);

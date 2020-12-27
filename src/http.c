@@ -51,11 +51,19 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
         {
             continue;
         }
-        if (rules.rules[i].content[0] == 0)
+        if (rules.rules[i].content[0] == 0 && rules.rules[i].client_side[0] == 0)
         {
             log_ids(rules.rules[i].msg);
         }
-        else if (strstr((char *) ether.data.data.data, rules.rules[i].content))
+
+        if (rules.rules[i].content[0] != 0 && 
+            strstr((char *) ether.data.data.data, rules.rules[i].content))
+        {
+            log_ids(rules.rules[i].msg);
+        }
+
+        if (rules.rules[i].client_side[0] != 0 && type == HTTP_CLIENT_SIDE &&
+            strstr((char *) ether.data.data.data, rules.rules[i].client_side))
         {
             log_ids(rules.rules[i].msg);
         }

@@ -29,6 +29,7 @@ typedef struct _RULE
 
     char msg[CONTENT_LENGTH];   
     char content[CONTENT_LENGTH];
+    char client_side[CONTENT_LENGTH];
 } Rule;
 
 typedef struct _RULE_LIST
