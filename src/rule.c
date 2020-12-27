@@ -14,6 +14,11 @@ parse_rule(StrList rules)
     size_t i;
     char *rule_raw;
     char *wanted_protocole;
+    char *token;
+    char *key;
+    char *value;
+    char *save;
+    char content[CONTENT_LENGTH];
     
     Rule rule;
     RuleList list;
@@ -24,9 +29,9 @@ parse_rule(StrList rules)
     for (i = 0; i < rules.length; i++)
     {
         rule_raw = rules.raw[i];
+        memset(content, 0, CONTENT_LENGTH);
 
         strcpy(rule.action, strtok(rule_raw, " "));
-
         wanted_protocole = strtok(NULL, " ");
 
         if (strcmp(wanted_protocole, "http") == 0 || strcmp(wanted_protocole, "HTTP") == 0)
@@ -50,29 +55,54 @@ parse_rule(StrList rules)
             assert(0);
         }
 
-        
         strcpy(rule.ip_src, strtok(NULL, " "));
         strcpy(rule.port_src, strtok(NULL, " "));
         strtok(NULL, " ");
         strcpy(rule.ip_dest, strtok(NULL, " "));
         strcpy(rule.port_dest, strtok(NULL, " "));
+        rule.content[0] = 0;
 
-        /*token = strtok(NULL, " ");
+        token = strtok(NULL, " ");
 
         while (token != NULL)
         {
-            push_format_string(&action, "%s ", token);
+            strcat(content, token);
+            content[strlen(content)] = ' ';
             token = strtok(NULL, " ");
         }
-
-        pop_tovoid_char_string(&action, 4);
-        actions = as_str_string(&action);
-        actions++;
         
-        strcpy(rule.content, as_str_string(&action));
-        list.rules[i] = rule;
+        memmove(content, content+1, strlen(content)-1);
+        content[strlen(content)-5] = '\0';
 
-        free_string(&action);*/
+        token = strtok_r(content, ";", &save);
+        while (token != NULL)
+        {
+            if (token[0] == ' ')
+            {
+                memmove(token, token+1, strlen(token)-1);
+                token[strlen(token)-1] = 0;
+            }
+
+            key = strtok(token, ":");
+            value = strtok(NULL, ":");
+
+            memmove(value, value+1, strlen(value)-1);
+            value[strlen(value)-2] = 0;
+
+            if (strcmp(key, "msg") == 0)
+            {
+                strcpy(rule.msg, value);
+            }
+
+            if (strcmp(key, "content") == 0)
+            {
+                strcpy(rule.content, value);
+            }
+
+            token = strtok_r(NULL, ";", &save);
+        }
+
+        list.rules[i] = rule;
     }
 
     return list;

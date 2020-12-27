@@ -19,7 +19,7 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
     
     populate_packet_ds(header, packet, &ether);
 
-    if (ether.data.data.data_length > 0)
+    if (ether.data.data.data_length > 1)
     {
         type = is_http_request((char *) ether.data.data.data, next_package);
 

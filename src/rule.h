@@ -27,7 +27,8 @@ typedef struct _RULE
     char port_src[PORT_LEN_STR];
     char port_dest[PORT_LEN_STR];
 
-    char content[CONTENT_LENGTH];      /* => Package content */
+    char msg[CONTENT_LENGTH];   
+    char content[CONTENT_LENGTH];
 } Rule;
 
 typedef struct _RULE_LIST

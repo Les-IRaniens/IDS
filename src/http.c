@@ -1,9 +1,11 @@
 #include "http.h"
 #include "utils/list.h"
 #include "utils/macro.h"
+#include "utils/log.h"
 
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 HttpRequestType
 is_http_request(char *str, int next_package)
@@ -12,7 +14,8 @@ is_http_request(char *str, int next_package)
     {
         return HTTP_CLIENT_SIDE;
     }
-    else if (strstr(str, "HTTP/1.0") != NULL || strstr(str, "HTTP/1.1") != NULL || strstr(str, "HTTP/2.0") != NULL)
+    else if (strstr(str, "HTTP/1.0") != NULL || strstr(str, "HTTP/1.1") != NULL
+             || strstr(str, "HTTP/2.0") != NULL)
     {
         return HTTP_SERVER_SIDE;
     }
@@ -30,9 +33,33 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
     size_t i;
     StrList split;
 
-    __unused(rules);
+    for (i = 0; i < rules.length; i++)
+    {
+        if (rules.rules[i].protocol != HTTP)
+        {
+            continue;
+        }
 
-    printf("%s\n", ether.data.data.data);
+        if (strcmp(rules.rules[i].ip_dest, "any") != 0 && 
+            strcmp(rules.rules[i].ip_dest, ether.data.destination_ip) != 0)
+        {
+            continue;
+        }
+
+        if (strcmp(rules.rules[i].ip_src, "any") != 0 && 
+            strcmp(rules.rules[i].ip_src, ether.data.source_ip) != 0)
+        {
+            continue;
+        }
+        if (rules.rules[i].content[0] == 0)
+        {
+            log_ids(rules.rules[i].msg);
+        }
+        else if (strstr((char *) ether.data.data.data, rules.rules[i].content))
+        {
+            log_ids(rules.rules[i].msg);
+        }
+    }
 
     if (type == HTTP_SERVER_SIDE)
     {
@@ -53,6 +80,10 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
     else if (type == HTTP_CONTENT)
     {
         *next_package -= ether.data.data.data_length;
-        assert(*next_package >= 0);
+        
+        if (*next_package < 0)
+        {
+            *next_package = 0;
+        }
     }
 }
