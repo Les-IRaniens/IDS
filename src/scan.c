@@ -41,9 +41,9 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
             {
                 log_ids(rules.rules[i].msg);
             }
-            else 
+            else if (strcmp(rules.rule[i].content, (const char *) ether.data.tcp_data.data) == 0)
             {
-                printf("%s\n", rules.rules[i].content);
+                log_ids(rules.rules[i].msg);
             }
         }
     }
