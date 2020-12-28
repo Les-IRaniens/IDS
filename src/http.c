@@ -40,7 +40,7 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
             continue;
         }
 
-        if (!is_in_context(rules.rules[i], &ether))
+        if (!is_in_context(rules.rules[i], &ether, HTTP))
         {
             continue;
         }
@@ -51,13 +51,13 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
         }
 
         if (rules.rules[i].content[0] != 0 && 
-            strstr((char *) ether.data.data.data, rules.rules[i].content))
+            strstr((char *) ether.data.tcp_data.data, rules.rules[i].content))
         {
             log_ids(rules.rules[i].msg);
         }
 
         if (rules.rules[i].client_side[0] != 0 && type == HTTP_CLIENT_SIDE &&
-            strstr((char *) ether.data.data.data, rules.rules[i].client_side))
+            strstr((char *) ether.data.tcp_data.data, rules.rules[i].client_side))
         {
             log_ids(rules.rules[i].msg);
         }
@@ -65,7 +65,7 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
 
     if (type == HTTP_SERVER_SIDE)
     {
-        split = split_to_strlist((char *) ether.data.data.data, "\n");
+        split = split_to_strlist((char *) ether.data.tcp_data.data, "\n");
 
         for (i = 0; i < split.length; i++)
         {
@@ -81,7 +81,7 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
 
     else if (type == HTTP_CONTENT)
     {
-        *next_package -= ether.data.data.data_length;
+        *next_package -= ether.data.tcp_data.data_length;
         
         if (*next_package < 0)
         {

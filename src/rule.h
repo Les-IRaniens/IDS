@@ -42,6 +42,6 @@ typedef struct _RULE_LIST
 
 RuleList parse_rule(StrList);
 void free_rules(RuleList *);
-bool is_in_context(Rule, void*);
+bool is_in_context(Rule, void*, Protocole);
 
 #endif  /* !_IDS_RULE_H_ */

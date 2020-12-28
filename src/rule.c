@@ -117,9 +117,14 @@ parse_rule(StrList rules)
 }
 
 bool 
-is_in_context(Rule rule, void *packet)
+is_in_context(Rule rule, void *packet, Protocole proto)
 {
     ETHER_Frame ether = *((ETHER_Frame *) packet);
+
+    if (rule.protocol != proto)
+    {
+        return false;
+    }
 
     if (strcmp(rule.ip_dest, "any") != 0 &&
         strcmp(rule.ip_dest, ether.data.destination_ip) != 0)
@@ -129,11 +134,6 @@ is_in_context(Rule rule, void *packet)
 
     if (strcmp(rule.ip_src, "any") != 0 &&
         strcmp(rule.ip_dest, ether.data.source_ip) != 0)
-    {
-        return false;
-    }
-
-    if (rule.protocol != ether.proto)
     {
         return false;
     }

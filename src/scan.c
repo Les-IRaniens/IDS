@@ -32,7 +32,7 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
 
         for (i = 0; i < rules.length; i++)
         {
-            if (!is_in_context(rules.rules[i], &ether))
+            if (!is_in_context(rules.rules[i], &ether, TCP))
             {
                 continue;
             }
@@ -41,7 +41,7 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
             {
                 log_ids(rules.rules[i].msg);
             }
-            else if (strcmp(rules.rule[i].content, (const char *) ether.data.tcp_data.data) == 0)
+            else if (strcmp(rules.rules[i].content, (const char *) ether.data.tcp_data.data) == 0)
             {
                 log_ids(rules.rules[i].msg);
             }
