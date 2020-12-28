@@ -40,17 +40,11 @@ check_rule_http(RuleList rules, ETHER_Frame ether, HttpRequestType type, int *ne
             continue;
         }
 
-        if (strcmp(rules.rules[i].ip_dest, "any") != 0 && 
-            strcmp(rules.rules[i].ip_dest, ether.data.destination_ip) != 0)
+        if (!is_in_context(rules.rules[i], &ether))
         {
             continue;
         }
-
-        if (strcmp(rules.rules[i].ip_src, "any") != 0 && 
-            strcmp(rules.rules[i].ip_src, ether.data.source_ip) != 0)
-        {
-            continue;
-        }
+       
         if (rules.rules[i].content[0] == 0 && rules.rules[i].client_side[0] == 0)
         {
             log_ids(rules.rules[i].msg);

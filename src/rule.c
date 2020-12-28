@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "utils/list.h"
+#include "populate.h"
 
 #include "rule.h"
 
@@ -114,6 +115,47 @@ parse_rule(StrList rules)
 
     return list;
 }
+
+bool 
+is_in_context(Rule rule, void *packet)
+{
+    ETHER_Frame ether = *((ETHER_Frame *) packet);
+
+    if (strcmp(rule.ip_dest, "any") != 0 &&
+        strcmp(rule.ip_dest, ether.data.destination_ip) != 0)
+    {
+        return false;
+    }
+
+    if (strcmp(rule.ip_src, "any") != 0 &&
+        strcmp(rule.ip_dest, ether.data.source_ip) != 0)
+    {
+        return false;
+    }
+
+    if (rule.protocol != ether.proto)
+    {
+        return false;
+    }
+
+    if (ether.proto == TCP)
+    {
+        if (strcmp(rule.port_dest, "any") != 0 && 
+            atoi(rule.port_dest) != ether.data.tcp_data.destination_port)
+        {
+            return false;
+        }
+
+        if (strcmp(rule.port_src, "any") != 0 && 
+            atoi(rule.port_src) != ether.data.tcp_data.source_port)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 void 
 free_rules(RuleList *lst)

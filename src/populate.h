@@ -3,6 +3,8 @@
 #include <netinet/if_ether.h>
 #include <string.h>
 
+#include "rule.h"
+
 /* Ethernet addresses are 6 bytes */
 #define SIZE_ETHERNET 14
 #define ETHER_ADDR_LEN_STR 18
@@ -77,7 +79,6 @@ typedef struct custom_udp
         int source_port;
         int destination_port;
         unsigned char *data;
-
 } UDP_Packet;
 
 typedef struct custom_tcp
@@ -89,15 +90,18 @@ typedef struct custom_tcp
         int th_flag;
         unsigned char *data;
         int data_length;
-
 } TCP_Segment;
 
 typedef struct custom_ip
 {
         char source_ip[IP_ADDR_LEN_STR];
         char destination_ip[IP_ADDR_LEN_STR];
-        TCP_Segment data;
 
+        union 
+        {
+                TCP_Segment tcp_data;
+                UDP_Packet udp_data;
+        };
 } IP_Packet;
 
 
@@ -108,7 +112,7 @@ typedef struct custom_ethernet
         int ethernet_type;
         int frame_size;
         IP_Packet data;
-
+        Protocole proto;
 } ETHER_Frame;
 
 int populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet,ETHER_Frame * frame);

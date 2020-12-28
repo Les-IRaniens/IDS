@@ -1,6 +1,8 @@
 #ifndef _IDS_RULE_H_
 #define _IDS_RULE_H_
 
+#include <stdbool.h>
+
 #include "utils/list.h"
 
 #define IP_ADDR_LEN_STR 16
@@ -40,5 +42,6 @@ typedef struct _RULE_LIST
 
 RuleList parse_rule(StrList);
 void free_rules(RuleList *);
+bool is_in_context(Rule, void*);
 
 #endif  /* !_IDS_RULE_H_ */

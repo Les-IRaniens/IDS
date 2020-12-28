@@ -2,6 +2,7 @@
 #include "http.h"
 #include "utils/macro.h"
 #include "utils/list.h"
+#include "utils/log.h"
 
 #include <pcap/pcap.h>
 #include <stdbool.h>
@@ -12,21 +13,43 @@ static int next_package = 0;
 void
 handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
 {
+    size_t i;
     ETHER_Frame ether;
     HttpRequestType type;
     RuleList rules = *((RuleList *) user);
-    __unused(rules);
+
     
     populate_packet_ds(header, packet, &ether);
 
-    if (ether.data.data.data_length > 1)
+    if (ether.proto == TCP && ether.data.tcp_data.data_length > 1)
     {
-        type = is_http_request((char *) ether.data.data.data, next_package);
+        type = is_http_request((char *) ether.data.tcp_data.data, next_package);
 
         if (type != HTTP_NOT_HTTP)
         {
             check_rule_http(rules, ether, type, &next_package);
         }
+
+        for (i = 0; i < rules.length; i++)
+        {
+            if (!is_in_context(rules.rules[i], &ether))
+            {
+                continue;
+            }
+
+            if (rules.rules[i].content[0] == '\0')
+            {
+                log_ids(rules.rules[i].msg);
+            }
+            else 
+            {
+                printf("%s\n", rules.rules[i].content);
+            }
+        }
+    }
+    else if(ether.proto == UDP)
+    {
+        /* UDP */
     }
 }
 
