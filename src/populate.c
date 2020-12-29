@@ -1,4 +1,7 @@
+#include <netinet/in.h>
 #include <stdio.h>
+#include <netinet/udp.h>
+
 #include "populate.h"
 #include "rule.h"
 
@@ -39,6 +42,7 @@ populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet, ETHER
     const struct sniff_ethernet *ethernet; /* The ethernet header */
     const struct sniff_ip *ip; /* The IP header */
     const struct sniff_tcp *tcp; /* The TCP header */
+    const struct udphdr *udp;
     unsigned char *payload; /* Packet payload */
 
     u_int size_ip;
@@ -95,9 +99,21 @@ populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet, ETHER
 
         if ((int)ip->ip_p==UDP_PROTOCOL)
         {
-            /*printf("\nUDP Handling\n");*/
+            UDP_Packet udp_packet;
 
+            /*printf("\nUDP Handling\n");*/
+            udp = (struct udphdr *) (packet + SIZE_ETHERNET + size_ip);
+
+            /* FIXME */
+            payload = NULL;
+
+            udp_packet.source_port = ntohs(udp->uh_sport);
+            udp_packet.destination_port = ntohs(udp->uh_dport);
+            udp_packet.data = payload;
+
+            custom_packet.udp_data = udp_packet;
             custom_frame->proto = UDP;
+            custom_frame->data = custom_packet;
         }
 
         if ((int)ip->ip_p==TCP_PROTOCOL)

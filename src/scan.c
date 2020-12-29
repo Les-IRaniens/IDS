@@ -7,6 +7,7 @@
 #include <pcap/pcap.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int next_package = 0;
 
@@ -21,7 +22,7 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
     
     populate_packet_ds(header, packet, &ether);
 
-    if (ether.proto == TCP && ether.data.tcp_data.data_length > 1)
+    if (ether.proto == TCP && ether.data.tcp_data.data_length > 1 && strlen((char *) ether.data.tcp_data.data) > 1)
     {
         type = is_http_request((char *) ether.data.tcp_data.data, next_package);
 
@@ -32,24 +33,41 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
 
         for (i = 0; i < rules.length; i++)
         {
-            if (!is_in_context(rules.rules[i], &ether, TCP))
+            if (is_in_context(rules.rules[i], &ether, TCP))
             {
-                continue;
+                if (rules.rules[i].content[0] == '\0')
+                {
+                    log_ids(rules.rules[i].msg);
+                }
+
+                else if (strcmp(rules.rules[i].content, (const char *) ether.data.tcp_data.data) == 0)
+                {
+                    log_ids(rules.rules[i].msg);
+                }
             }
 
-            if (rules.rules[i].content[0] == '\0')
+            else if (is_in_context(rules.rules[i], &ether, FTP))
             {
-                log_ids(rules.rules[i].msg);
+                if (rules.rules[i].protocol == FTP && 
+                    strstr((char *) ether.data.tcp_data.data, "ftpd") != NULL)
+                {
+                    log_ids(rules.rules[i].msg);
+                }
             }
-            else if (strcmp(rules.rules[i].content, (const char *) ether.data.tcp_data.data) == 0)
-            {
-                log_ids(rules.rules[i].msg);
-            }
+
         }
     }
     else if(ether.proto == UDP)
     {
-        /* UDP */
+        for (i = 0; i < rules.length; i++)
+        {
+            if (!is_in_context(rules.rules[i], &ether, UDP))
+            {
+                continue;
+            }
+
+            log_ids(rules.rules[i].msg);
+        }
     }
 }
 

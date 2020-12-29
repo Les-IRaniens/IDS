@@ -152,6 +152,20 @@ is_in_context(Rule rule, void *packet, Protocole proto)
             return false;
         }
     }
+    else if(ether.proto == UDP)
+    {
+        if (strcmp(rule.port_dest, "any") != 0 && 
+            atoi(rule.port_dest) != ether.data.udp_data.destination_port)
+        {
+            return false;
+        }
+
+        if (strcmp(rule.port_src, "any") != 0 && 
+            atoi(rule.port_src) != ether.data.udp_data.source_port)
+        {
+            return false;
+        }
+    }
 
     return true;
 }

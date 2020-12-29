@@ -73,7 +73,6 @@ struct sniff_tcp
         u_short th_urp;         /* urgent pointer */
 };
 
-
 typedef struct custom_udp
 {
         int source_port;
