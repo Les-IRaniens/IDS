@@ -47,4 +47,9 @@ clean:
 
 re: clean all
 
+install: all
+	cp ./ids /usr/bin/
+	cp ./ids.rules /etc/
+	cp ./ids.service /etc/systemd/system/ 
+
 .PHONY: all clean re

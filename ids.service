@@ -1,0 +1,9 @@
+[Unit]
+Description=DEV("IDS")
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/ids -i enp7s0 /etc/ids.rules
+
+[Install]
+WantedBy=multi-user.target
