@@ -110,6 +110,7 @@ populate_packet_ds(const struct pcap_pkthdr *header, const u_char *packet, ETHER
             udp_packet.source_port = ntohs(udp->uh_sport);
             udp_packet.destination_port = ntohs(udp->uh_dport);
             udp_packet.data = payload;
+            
 
             custom_packet.udp_data = udp_packet;
             custom_frame->proto = UDP;
