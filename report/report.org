@@ -39,7 +39,7 @@ pour planifier notre travail
 
 #+NAME: fig:org-mode
 #+CAPTION: Capture d'écran de notre rapport écrit avec l'Org mode
-#+ATTR_ORG: width 120
+#+ATTR\_ORG: width 120
 [[./img/org.png]]
 *** Github
 Une fois notre planing fait il nous fallait une solution pour que chaqu'un d'entre nous aie une copie du code toujours à jours 
@@ -73,3 +73,47 @@ Pourquoi celà ? Car Archlinux est une distribution polyvalante qui a TOUS les p
 *** Vscodium
 C'est Visual Studio Code - les fonctions de télémétries, c'est notre éditeur de choix, car il permet une super bonne intégration avec notre github,
 nous informe de nos erreurs et des warnings potentiels grâce à l'extension C/C++.
+* Explications du code
+Dés le départ nous avons penser à subdiviser le code en plusieurs fichier, celà permet de limiter le nombre de ligne de code
+par fichier, en effet le maximum par fichier est de 300 lignes de code, se qui permet de trouver nos erreurs plus efficacement
+
+** main.c
+*** int main (int argc, char *argv[])
+C'est un peux le chef d'orchestre de notre programme, ce fichier contient la fonction main qui donne les entrées utilisateurs au différentes fonctions grâce
+aux paramètres donné au programme (argv) et vérifie que l'utilisateur démarre bien le programme avec \sudo\.
+
+** usage.c
+*** void show_usage (char *exe_path)
+Si l'utilisateur nous donne aucun paramètre ou si il nous donne le paramètre d'aide (-h | --help)
+la fonction main nous envois sur cette fonction et nous montre un message d'utilisation. L'argument exe\_path comprend le chemain de l'executable
+et on récupère que le nom de l'executable (grâce à la fonction basename)
+
+** checkuser.c
+*** bool is_root(void)
+il s'agit d'une simple vérification pour voir si on démarre bien le programme en tant qu'administrateur système
+** utils/list.c
+*** void init_str_list(StrList *self)
+Cette fonction est le constructeur de notre objet StrList (il s'agit d'une structure qui correspont à un tableau de string allouer de manière automatique)
+Il attribue un emplacement mémoire de base.
+*** void append_str_list(StrList *self, const char *str) 
+La fonction vérifie tous d'abord si notre liste à assez de place en mémoire, si c'est pas le cas on lui donne plus d'emplacement mémoire
+et on ajoute la chaine de carractère donner en paramètre à la fin de la liste
+*** StrList split_to_liststr(char *str, const char *del) 
+Cette méthode découpe une chaine de carractère selon un délimiteur et met chaque partie dans une liste
+*** void free_str_list(StrList *self)
+Cette fonction libère la mémoire occupé par une liste
+** utils/log.c
+*** void log_ids(const char *msg)
+Cette fonction écrit dans le syslog
+** readrules.c
+*** StrList read_rules(const char *filename)
+C'est ici que se produit la lecture des règles (données en paramètre par l'utilisateur), le fichier est lu ligne par ligne et 
+placer dans une liste de string
+** rule.c
+*** RuleList parse_rule(StrList rules)
+Voilà la fonction qui est responsable de traduire chaque règles en une structure qu'on a simplement nommer \Rule\, qu'on place dans une liste
+qu'on a nommé \RuleList\ qui occupe un certains emplacement mémoire; la struct rule contient le protocol, l'addresse de source et de destination, le prot de source et de destination. 
+*** bool is_in_context(Rule rule, void *packet, Protocole proto)
+    Cette fonction vérifie si le paquet match avec une des règles
+*** free_rules(RuleList *lst)
+cette fonction libère l'emplacement mémoire pris par les listes de règles

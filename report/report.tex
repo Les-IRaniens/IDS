@@ -1,4 +1,4 @@
-% Created 2020-12-31 Thu 14:24
+% Created 2021-01-01 Fri 13:55
 % Intended LaTeX compiler: pdflatex
 \documentclass[a4paper]{report}
 \usepackage[utf8]{inputenc}
@@ -27,6 +27,8 @@
  pdflang={English}}
 \begin{document}
 
+\tableofcontents
+
 \begin{LaTex}
 \begin{titlepage}
 \centering
@@ -50,45 +52,43 @@
 \tableofcontents
 
 \part{Introduction}
-\label{sec:org7800537}
+\label{sec:org5d1bc14}
 \chapter{Contexte}
-\label{sec:orgb0ec95b}
+\label{sec:org3335258}
 Dans le cadre du cours de développement il nous a été demandé de réalisé un système de détection d'intrusion (ou IDS pour faire plus cours).
 Ce programme à pour but d'analyser le trafique réseau et reporter toutes activité suspectes à un administrateur système ou même un administrateur réseau
 grâce à un système de log.
 
 \chapter{Outils utilisés}
-\label{sec:org8e3225b}
+\label{sec:orgdbb8348}
 \section{Org mode}
-\label{sec:org0e1ee43}
+\label{sec:org15cdba8}
 Org mode est un mode majeur pour le logiciel GNU Emacs qui permet de prendre notes et maintenir une Todo liste et permet aussi de planifier facilement des projets
 grâce à son langage Markup (très proche du markdown). On l'a utilisé pour écrire ce report (ok on a un peu tricher on a mit un peu de Latex pour faire joli) et aussi
 pour planifier notre travail 
 
-\begin{figure}[htbp]
-\centering
+\begin{center}
 \includegraphics[width=.9\linewidth]{./img/org.png}
-\caption{\label{fig:org498c5f6}Capture d'écran de notre rapport écrit avec l'Org mode}
-\end{figure}
+\end{center}
 \section{Github}
-\label{sec:orga820e72}
+\label{sec:org80c92bc}
 Une fois notre planing fait il nous fallait une solution pour que chaqu'un d'entre nous aie une copie du code toujours à jours 
 et qu'on puisse tracker nos modifications, ce qui est très pratique en cas de bug, en effet il nous aurait suffit que de revenir 
 quelques modifications en arrière et le problème est régler !
 
 Notre projet est disponible ici:
-\begin{LaTex}
+\#+BEGIN$\backslash$\textsubscript{LaTex}
 \begin{center}
     {\small \url{https://github.com/Les-IRaniens/IDS}}
 \end{center}
-\end{LaTex}
+\#+END$\backslash$\textsubscript{LaTex}
 \section{GNU Makefile}
-\label{sec:orgd4f8571}
+\label{sec:org768768b}
 Comme tous bon informaticiens qui se respecte, on a pas envie de tapper une très longue commande composé d'une dixène de fichiers et d'une
 autres dixène de flag à chaque fois qu'on souhaite compiler notre programme, alors on a décider d'utiliser un makefile. 
 Le makefile s'occupe de compiler et de linker notre code automatiquement, il suffit de tapper make dans le terminal et le tour est jouer !
 \section{Nos flags de compilations}
-\label{sec:orgacd67b3}
+\label{sec:org78faf0b}
 \begin{itemize}
 \item -pednatic: nous oblige fortement à adhérer aux règles de l'ANSI C
 \item -Wpednatic: nous affiche des warnings si on respecte pas la pedantic
@@ -102,11 +102,75 @@ Le makefile s'occupe de compiler et de linker notre code automatiquement, il suf
 \end{itemize}
 
 \section{ArchLinux}
-\label{sec:orgcff1eca}
+\label{sec:org8bc032b}
 Programmer sur Kali c'est pas top, surtout sur une VM ! Donc on a préférer utiliser ArchLinux pour le travail sur machine native.
 Pourquoi celà ? Car Archlinux est une distribution polyvalante qui a TOUS les paquets qu'on désire (oui même tous les paquets de Kali)
 \section{Vscodium}
-\label{sec:orga96acb4}
+\label{sec:org6388911}
 C'est Visual Studio Code - les fonctions de télémétries, c'est notre éditeur de choix, car il permet une super bonne intégration avec notre github,
 nous informe de nos erreurs et des warnings potentiels grâce à l'extension C/C++.
+\part{Explications du code}
+\label{sec:org809e1a5}
+Dés le départ nous avons penser à subdiviser le code en plusieurs fichier, celà permet de limiter le nombre de ligne de code
+par fichier, en effet le maximum par fichier est de 300 lignes de code, se qui permet de trouver nos erreurs plus efficacement
+
+\chapter{main.c}
+\label{sec:orgf1590b0}
+\section{int main (int argc, char *argv[])}
+\label{sec:orge86ec9a}
+C'est un peux le chef d'orchestre de notre programme, ce fichier contient la fonction main qui donne les entrées utilisateurs au différentes fonctions grâce
+aux paramètres donné au programme (argv) et vérifie que l'utilisateur démarre bien le programme avec \sudo$\backslash$.
+
+\chapter{usage.c}
+\label{sec:org8dbb097}
+\section{void show$\backslash$\textsubscript{usage} (char *exe$\backslash$\textsubscript{path})}
+\label{sec:org48e8cb6}
+Si l'utilisateur nous donne aucun paramètre ou si il nous donne le paramètre d'aide (-h | --help)
+la fonction main nous envois sur cette fonction et nous montre un message d'utilisation. L'argument exe$\backslash$\textsubscript{path} comprend le chemain de l'executable
+et on récupère que le nom de l'executable (grâce à la fonction basename)
+
+\chapter{checkuser.c}
+\label{sec:org1b8ba7b}
+\section{bool is$\backslash$\textsubscript{root}(void)}
+\label{sec:org80b9369}
+il s'agit d'une simple vérification pour voir si on démarre bien le programme en tant qu'administrateur système
+\chapter{utils/list.c}
+\label{sec:org5e94d7e}
+\section{void init$\backslash$\textsubscript{str}$\backslash$\textsubscript{list}(StrList *self)}
+\label{sec:org5781110}
+Cette fonction est le constructeur de notre objet StrList (il s'agit d'une structure qui correspont à un tableau de string allouer de manière automatique)
+Il attribue un emplacement mémoire de base.
+\section{void append$\backslash$\textsubscript{str}$\backslash$\textsubscript{list}(StrList *self, const char *str)}
+\label{sec:orgb3a0d2a}
+La fonction vérifie tous d'abord si notre liste à assez de place en mémoire, si c'est pas le cas on lui donne plus d'emplacement mémoire
+et on ajoute la chaine de carractère donner en paramètre à la fin de la liste
+\section{StrList split$\backslash$\textsubscript{to}$\backslash$\textsubscript{liststr}(char *str, const char *del)}
+\label{sec:org2308a95}
+Cette méthode découpe une chaine de carractère selon un délimiteur et met chaque partie dans une liste
+\section{void free$\backslash$\textsubscript{str}$\backslash$\textsubscript{list}(StrList *self)}
+\label{sec:orgbc482fd}
+Cette fonction libère la mémoire occupé par une liste
+\chapter{utils/log.c}
+\label{sec:org67d35bf}
+\section{void log$\backslash$\textsubscript{ids}(const char *msg)}
+\label{sec:orge8bfb0d}
+Cette fonction écrit dans le syslog
+\chapter{readrules.c}
+\label{sec:org7b1e435}
+\section{StrList read$\backslash$\textsubscript{rules}(const char *filename)}
+\label{sec:org5357080}
+C'est ici que se produit la lecture des règles (données en paramètre par l'utilisateur), le fichier est lu ligne par ligne et 
+placer dans une liste de string
+\chapter{rule.c}
+\label{sec:orge5979b1}
+\section{RuleList parse$\backslash$\textsubscript{rule}(StrList rules)}
+\label{sec:orga5d41d9}
+Voilà la fonction qui est responsable de traduire chaque règles en une structure qu'on a simplement nommer \Rule$\backslash$, qu'on place dans une liste
+qu'on a nommé \RuleList$\backslash$ qui occupe un certains emplacement mémoire; la struct rule contient le protocol, l'addresse de source et de destination, le prot de source et de destination. 
+\section{bool is$\backslash$\textsubscript{in}$\backslash$\textsubscript{context}(Rule rule, void *packet, Protocole proto)}
+\label{sec:orgc39f7c2}
+Cette fonction vérifie si le paquet match avec une des règles
+\section{free$\backslash$\textsubscript{rules}(RuleList *lst)}
+\label{sec:org8d082f9}
+cette fonction libère l'emplacement mémoire pris par les listes de règles
 \end{document}
