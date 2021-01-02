@@ -117,3 +117,17 @@ qu'on a nommé \RuleList\ qui occupe un certains emplacement mémoire; la struct
     Cette fonction vérifie si le paquet match avec une des règles
 *** free_rules(RuleList *lst)
 cette fonction libère l'emplacement mémoire pris par les listes de règles
+** scan.c
+*** void scan_network(char *interface, RuleList rules)
+Cette fonction permet de préparer la libpcap et le scan du réseau
+*** void handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
+Cette fonction est le point centrale de notre IDS, elle capture et annalyse chaque paquet qui passe par le réseau, 
+elle utilise la fonction populate (présent dans le fichier populate.c) pour convertir les données binaire reçu dans le réseau
+vers des structures plus simple à travaillier. Si un règle match; il donne un message prédéfini dans le dossier des règles au système de log de l'IDS.
+* Critère de dépassement
+Voici une petite liste des petits plus qu'on a ajouté au projet
+- Utilisation des services Linux pour faire tourner l’application en tache de fond (make install)
+- Construire une règle permettant de détecter une attaque de type XSS (simple).  Cette règle devra être utilisable dans votre IDSConstruire une règle permettant de détecter une attaque de type XSS (simple).  Cette règle devra être utilisable dans votre IDS.
+Pour celà nous avons ajouter un nouveau paramètre dans les règles nommer client-side-content, ce paramètre se comporte comme content mais s'occupe que du côter client et ignore le côter serveur
+- Gestion des version (Github)
+- On a un Makefile (?)
