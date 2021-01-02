@@ -1,6 +1,5 @@
 #include "scan.h"
 #include "http.h"
-#include "utils/macro.h"
 #include "utils/list.h"
 #include "utils/log.h"
 
@@ -49,7 +48,9 @@ handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet)
             else if (is_in_context(rules.rules[i], &ether, FTP))
             {
                 if (rules.rules[i].protocol == FTP && 
-                    strstr((char *) ether.data.tcp_data.data, "ftpd") != NULL)
+                    (strstr((char *) ether.data.tcp_data.data, "ftpd") != NULL ||
+                    strstr((char *) ether.data.tcp_data.data, "FTPd") != NULL || 
+                    strstr((char *) ether.data.tcp_data.data, "FTPD") != NULL))
                 {
                     log_ids(rules.rules[i].msg);
                 }
