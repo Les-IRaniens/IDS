@@ -1,6 +1,5 @@
 #include "http.h"
 #include "utils/list.h"
-#include "utils/macro.h"
 #include "utils/log.h"
 
 #include <stdlib.h>
